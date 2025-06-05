@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+body {
+    font-family: "Ubuntu", sans-serif !important;
+}
+
+:root {
+    --color-primary: #2C4B95;
+    --color-dark-primary: #1A387F;
+    --color-light-primary: #7197F2;
+    --color-white: #F2F2F2;
+    --color-ice: #EDEDED;
+    --alternative-color: #F07128;
+}
+
+/* Colors */
+.bg-brand-primary {
+    background-color: var(--color-primary);
+}
+
+.text-brand-primary {
+    color: var(--color-primary);
+}
+
+.text-color-white {
+    color: var(--color-white);
+}
+
+.bg-color-white {
+    color: var(--color-white);
+}
+
+.bg-ice {
+    background-color: var(--color-ice);
+}
+
+.bg-dark-primary {
+    background-color: var(--color-dark-primary);
+}
+
+.bg-light-primary {
+    background-color: var(--color-light-primary) !important;
+}
+
+/* BTNs */
+
+.btn-default {
+    border-radius: 10px;
+    background-color: var(--alternative-color) !important;
+    color: var(--color-white) !important;
+    font-weight: 700 !important;
+    border: none;
+    border-radius: 200px !important;
+}
+
+.btn-default:hover {
+    background-color: #da5507 !important;
+    color: var(--color-white) !important;
+}
+
+/* Header */
+.nav-link {
+    color: var(--color-white) !important;
+    font-size: 1.125rem;
+}
+
+.navbar-toggler {
+    border-color: var(--color-white)!important;
+}
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E")!important;
+}
+
+/* Banner Section */
+#banner {
+    background-image: url("../img/background.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Form */
+form .card-header {
+    background-color: white !important;
+}
+
+form.card {
+    border-radius: 1.1875rem !important;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-style: italic;
+}
+
+.form-control {
+    border-radius: 1.875rem !important;
+    border: 1px solid var(--color-primary) !important;
+    background: var(--color-white) !important;
+    font-size: 0.8rem !important;
+}
+
+/* Sections */
+
+.card-fixed {
+    height: 100%;
+    min-height: 370px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-img-wrapper {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accordion-item {
+    border: 1px solid var(--color-primary) !important;
+    border-radius: 1rem !important;
+    overflow: hidden !important;
+    background-color: var(--color-ice) !important;
+}
+
+.accordion-button {
+    background-color: var(--color-ice) !important;
+    color: var(--color-primary) !important;
+    border-radius: 1rem !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--color-ice) !important;
+    color: var(--color-primary) !important;
+    box-shadow: none !important;
+}
+
+.accordion-button::after {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(39%) saturate(1215%) hue-rotate(193deg) brightness(94%) contrast(91%) !important;
+}
+
+/* Glide */
+.glide__track {
+    position: relative !important;
+}
+.glide__arrow {
+    background-color: var(--color-primary)!important;
+}
+
+.glide__arrow:hover {
+    background-color: var(--color-light-primary)!important;
+}
+
+.glide__bullet {
+    background-color: var(--color-light-primary)!important;
+}
+
+.glide__bullet--active {
+    background-color: var(--color-primary)!important;
+}
+.glide__bullets {
+    bottom: 0em; /* 2 is default */
+    position: relative!important; /* absolut is default */
+}
+#section2 .glide__arrow--left {
+    left: -3em!important;
+}
+#section2 .glide__arrow--right {
+    right: -3em!important;
+}
+
+#section3 .glide__arrow--left {
+    left: -1.2em!important;
+}
+#section3 .glide__arrow--right {
+    right: -1.2em!important;
+}
