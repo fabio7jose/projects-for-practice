@@ -4,4 +4,4 @@ Repository created with the objective of bringing together my studies and practi
 
 ## Projects
 
-- [Savings Space — banking design challenge](LPs/savings-space): case study, interactive code prototype, Figma links, design system, AI workflow, component handoff and summary slides.
+- [Savings Space — banking design challenge](LPs/savings-space) · [Live site](https://savings-space.vercel.app): case study, interactive code prototype, Figma links, design system, AI workflow, component handoff and summary slides.

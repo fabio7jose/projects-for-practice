@@ -2,6 +2,8 @@
 
 A case study and working prototype for the WIT AI-native banking design challenge, by Fábio José.
 
+**Live site:** https://savings-space.vercel.app
+
 The page includes the complete savings journey, design rationale, direct links to the Figma deliverables, a component handoff, evidence of the AI-assisted workflow and the two-slide summary.
 
 ## Project files
@@ -38,6 +40,8 @@ The build bundles the JavaScript into a classic browser script and verifies the 
 - Output directory: `dist`.
 
 The deployment configuration is included in `vercel.json`.
+
+The Vercel project is connected to this repository with `LPs/savings-space` as its root directory.
 
 ## Prototype behaviour
 
