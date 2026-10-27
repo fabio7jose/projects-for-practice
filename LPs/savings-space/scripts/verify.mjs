@@ -1,0 +1,18 @@
+import {readFile,access,readdir} from 'node:fs/promises';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../dist');
+const html=await readFile(resolve(root,'index.html'),'utf8');
+const css=await readFile(resolve(root,'styles.css'),'utf8');
+const js=await readFile(resolve(root,'app.mjs'),'utf8');
+const runtime=await readFile(resolve(root,'app.js'),'utf8');
+if(/<script[^>]+type=["']module["']/i.test(html))throw new Error('Direct-file preview requires the bundled classic script.');
+if(/^\s*(?:import|export)\s/m.test(runtime))throw new Error('Browser bundle contains unbundled ES module declarations.');
+const refs=[...html.matchAll(/(?:src|href)="\.\/([^"#]+)"/g)].map(m=>m[1]);
+for(const ref of refs)await access(resolve(root,ref));
+for(const ref of [...css.matchAll(/url\(['"]?\.\/([^)'"\s]+)/g)].map(m=>m[1]))await access(resolve(root,ref));
+const ids=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]));
+for(const m of html.matchAll(/href="#([^"\s]+)"/g))if(!ids.has(m[1]))throw new Error('Missing anchor: '+m[1]);
+if(/https?:\/\/localhost/.test(html+css+js))throw new Error('Local URL in release content');
+if(!(await readdir(resolve(root,'assets'))).includes('savings-space-summary.pdf'))throw new Error('Missing PDF');
+console.log('Static release verified: portable browser bundle, assets, fonts, PDF and section anchors.');

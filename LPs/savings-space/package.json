@@ -1,0 +1,14 @@
+{
+  "name": "savings-space-case-study",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build && node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build.mjs && node scripts/verify.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}
