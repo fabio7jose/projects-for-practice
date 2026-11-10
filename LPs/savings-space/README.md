@@ -6,6 +6,8 @@ A case study and working prototype for the WIT AI-native banking design challeng
 
 The page includes the complete savings journey, design rationale, direct links to the Figma deliverables, a component handoff, evidence of the AI-assisted workflow and the two-slide summary.
 
+Use the PT / EN selector to switch the case study and code prototype between Portuguese and English. The preference is saved in the browser. Changing language preserves the current prototype step, contribution and approval state. Summary previews and all summary PDF links follow the selected language; the original Figma file and screen captures remain in English.
+
 ## Project files
 
 - [Figma file and summary slides](https://www.figma.com/design/ySDtCbOoNdw6T8Glz4VKcV/Savings-Space?node-id=42-3)
@@ -13,6 +15,7 @@ The page includes the complete savings journey, design rationale, direct links t
 - [Design system](https://www.figma.com/design/ySDtCbOoNdw6T8Glz4VKcV/Savings-Space?node-id=38-211)
 - [Component handoff](https://www.figma.com/design/ySDtCbOoNdw6T8Glz4VKcV/Savings-Space?node-id=44-229)
 - [Summary PDF](dist/assets/savings-space-summary.pdf)
+- [Portuguese summary PDF](dist/assets/savings-space-summary-pt.pdf)
 
 ## Local development
 
@@ -56,6 +59,7 @@ The phone preview uses a 402 × 874 logical display, based on the [iPhone 17 dis
 - `dist/index.html`: case-study content and deliverable links.
 - `dist/styles.css`: responsive presentation and product interface.
 - `dist/app.mjs`: interactive journey and phone presentation.
+- `dist/i18n.mjs`: Portuguese copy, language preference and localized assets.
 - `dist/demo-state.mjs`: intent handling and approval state.
 - `dist/plan.mjs`: financial schedule calculations.
 - `dist/app.js`: generated browser bundle.

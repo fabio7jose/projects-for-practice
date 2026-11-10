@@ -1,5 +1,6 @@
 import {DEFAULT_PLAN,calculate,euros,monthLabel,timingLabel,suggestContribution} from './plan.mjs';
 import {initialDemo,understandIntent,setContribution,confirmPlan} from './demo-state.mjs';
+import {installLanguageSwitch,translate} from './i18n.mjs';
 const prototype=document.querySelector('#prototype');
 const dialog=document.querySelector('#explanation');
 const stepLabels=['Express an intent','Understand the plan','Explore the recommendation','Choose your contribution','Review & approve','Plan created'];
@@ -15,6 +16,17 @@ let state=initialDemo();
 let draft=null;
 let stepBeforeAdjust=2;
 let lastFocus=null;
+const sampleRequest=initialDemo().request;
+const portugueseRequest=translate(sampleRequest,'pt');
+document.addEventListener('languagechange',event=>{
+  const input=document.querySelector('#intent');
+  if(input)state.request=input.value;
+  if([sampleRequest,portugueseRequest].includes(state.request)){
+    state.request=event.detail==='pt'?portugueseRequest:sampleRequest;
+    if(input)input.value=state.request;
+  }
+  requestAnimationFrame(fitPhone);
+});
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const paths={
   back:'<path d="m14 6-6 6 6 6M8 12h13"/>',
@@ -52,8 +64,8 @@ function recommendation(preview=false){
   const content='<div class="app-label-row"><h3 class="app-label">Recommended plan</h3>'+adjust+'</div><p class="app-amount">'+euros(p.monthly)+'<small>/ month</small></p><p class="app-caption">'+r.count+' transfers · '+monthLabel(p.start)+' – '+monthLabel(r.finish)+'</p>'+chart(p,r)+budget(p,r,preview)+warning(r)+'<p class="app-recommendation-note">'+(r.early>0?euros(p.monthly)+' a month gets you there '+timingLabel(r)+', with '+euros(r.buffer)+' left as a buffer.':euros(p.monthly)+' a month leaves '+euros(r.buffer)+' as a buffer. Your goal is reached in '+monthLabel(r.finish)+'.')+'</p>'+actions((preview?'<div class="app-primary">Review plan &nbsp; →</div>':primary('Review plan','review'))+trust('Nothing moves until you confirm.'));
   return shell(content,{hero:true,preview});
 }
-function goal(){return shell('<span class="app-eyebrow">EVERYDAY BANKING</span><h2 class="app-heading" id="demo-title">What are you<br>saving for?</h2><p class="app-subheading">Describe your goal and when you need the money.</p><form class="app-goal-form" id="intent-form"><div class="app-composer"><label class="sr-only" for="intent">Your holiday savings request</label><textarea id="intent" name="intent" maxlength="500" required>'+escape(state.request)+'</textarea><span>Editable example · Holiday savings demo</span></div><p class="app-hint">Try your own euro amount for a holiday.<br>The demo assumes an August 2027 deadline.</p><p class="app-form-error" id="intent-error" role="alert"></p>'+actions('<button type="submit" class="app-primary">Send request '+icon('arrow')+'</button>'+trust('You approve every action.'))+'</form>',{title:'Your bank',back:false});}
-function understand(){const p=state.plan,r=calculate(p);return shell('<h2 class="app-heading" id="demo-title">Your holiday goal</h2><p class="app-subheading">Your holiday · Summer 2027</p><div class="app-message">'+escape(state.request)+'</div><div class="app-assistant-label">'+icon('chat')+'Banking assistant</div><p class="app-response">The plan uses the €520 available each month in this example. You can change how much goes towards the holiday.</p>'+budget(p,r)+'<p class="app-assumption">I’ve used August 2027 for “next summer”.<br>You can change your contribution in the plan.</p>'+actions(primary('See my plan','plan')+trust('Nothing happens without your approval.')),{title:'Banking assistant'});}
+function goal(){return shell('<span class="app-eyebrow">EVERYDAY BANKING</span><h2 class="app-heading" id="demo-title">What are you<br>saving for?</h2><p class="app-subheading">Describe your goal and when you need the money.</p><form class="app-goal-form" id="intent-form"><div class="app-composer"><label class="sr-only" for="intent">Your holiday savings request</label><textarea id="intent" name="intent" maxlength="500" required>'+escape(state.request===sampleRequest&&document.documentElement.lang==='pt-PT'?portugueseRequest:state.request)+'</textarea><span>Editable example · Holiday savings demo</span></div><p class="app-hint">Try your own euro amount for a holiday.<br>The demo assumes an August 2027 deadline.</p><p class="app-form-error" id="intent-error" role="alert"></p>'+actions('<button type="submit" class="app-primary">Send request '+icon('arrow')+'</button>'+trust('You approve every action.'))+'</form>',{title:'Your bank',back:false});}
+function understand(){const p=state.plan,r=calculate(p);return shell('<h2 class="app-heading" id="demo-title">Your holiday goal</h2><p class="app-subheading">Your holiday · Summer 2027</p><div class="app-message">'+escape([sampleRequest,portugueseRequest].includes(state.request)?sampleRequest:state.request)+'</div><div class="app-assistant-label">'+icon('chat')+'Banking assistant</div><p class="app-response">The plan uses the €520 available each month in this example. You can change how much goes towards the holiday.</p>'+budget(p,r)+'<p class="app-assumption">I’ve used August 2027 for “next summer”.<br>You can change your contribution in the plan.</p>'+actions(primary('See my plan','plan')+trust('Nothing happens without your approval.')),{title:'Banking assistant'});}
 function summary(p){const r=calculate(p);return '<div class="app-adjust-summary"><div><span>Goal reached</span><strong>'+monthLabel(r.finish,true)+'</strong></div><div><span>Monthly buffer</span><strong>'+euros(r.buffer)+'</strong></div></div>'+warning(r)+(r.buffer<145?'<p class="app-warning">This leaves less than the recommended €145 buffer.</p>':'');}
 function choice(label,amount,caption){return '<button class="app-choice '+(draft.monthly===amount?'active':'')+'" type="button" data-contribution="'+amount+'" aria-pressed="'+(draft.monthly===amount)+'"><strong>'+label+'</strong><small>'+euros(amount)+'/month · '+caption+'</small></button>';}
 function adjust(){const suggested=suggestContribution(state.plan),onTime=Math.ceil(calculate(state.plan).minimumToDeadline),suggestedResult=calculate({...draft,monthly:suggested});return shell('<h2 class="app-heading" id="demo-title">Adjust monthly savings</h2><p class="app-subheading">Change the amount to compare the date and buffer.</p><form id="adjust-form"><label class="app-field-label" for="contribution">Monthly contribution</label><div class="app-adjust-amount"><span aria-hidden="true">€</span><input id="contribution" name="contribution" type="number" min="1" max="520" step="1" value="'+draft.monthly+'" required inputmode="numeric"><small>/ month</small></div><label class="sr-only" for="contribution-range">Adjust monthly contribution</label><input class="app-range" id="contribution-range" type="range" min="1" max="520" step="1" value="'+draft.monthly+'">'+choice(suggestedResult.early>0?'Finish earlier':'Keep the recommended buffer',suggested,monthLabel(suggestedResult.finish))+(onTime!==suggested&&onTime<=520?choice(onTime<suggested?'More breathing room':'Meet the deadline',onTime,monthLabel(calculate({...draft,monthly:onTime}).finish)):'')+'<div id="adjust-summary" aria-live="polite">'+summary(draft)+'</div><p class="app-form-error" id="adjust-error" role="alert"></p></form>'+actions('<button class="app-primary" type="submit" form="adjust-form">Apply to my plan '+icon('arrow')+'</button><button class="app-secondary" type="button" data-demo="cancel-adjust">Back to my plan</button>'),{title:'Summer holiday'});}
@@ -181,6 +193,7 @@ function fitPhone(){
   }
 }
 render({announce:false});
+installLanguageSwitch();
 fitPhone();
 window.addEventListener('resize',fitPhone,{passive:true});
 if('ResizeObserver' in window){new ResizeObserver(()=>requestAnimationFrame(fitPhone)).observe(document.querySelector('.prototype-stage'));}

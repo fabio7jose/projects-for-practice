@@ -5,10 +5,15 @@ export function understandIntent(request){
   const text=String(request).trim();
   if(text.length<12)throw new Error('Tell us a little more about your savings goal.');
   if(text.length>500)throw new Error('Keep your request under 500 characters.');
-  const match=text.match(/(?:€\s*([\d,]+(?:\.\d{1,2})?)|([\d,]+(?:\.\d{1,2})?)\s*(?:euros?\b|eur\b))/i);
+  const match=text.match(/(?:€\s*(\d[\d.,]*)|(\d[\d.,]*)\s*(?:euros?\b|eur\b))/i);
   if(!match)throw new Error('Include a goal amount, for example “€3,000 for a holiday next summer”.');
-  if(!/\b(?:summer|holiday|vacation|trip|travel)\b/i.test(text))throw new Error('This focused demo supports holiday savings. Try a request with a euro amount and “holiday next summer”.');
-  const target=Number((match[1]||match[2]).replaceAll(',',''));
+  if(!/\b(?:summer|holiday|vacation|trip|travel|ferias|viagem|viajar|verao)\b/i.test(text.normalize('NFD').replace(/[\u0300-\u036f]/g,'')))throw new Error('This focused demo supports holiday savings. Try a request with a euro amount and “holiday next summer”.');
+  const amount=match[1]||match[2];
+  // Accept 3,000 / 3.000 and decimal amounts in either language.
+  const grouped=/^\d{1,3}([.,])\d{3}(?:\1\d{3})*(?:[.,]\d{1,2})?$/.test(amount);
+  const normalised=grouped?amount.replace(/[.,](?=\d{3}(?:[.,]|$))/g,'').replace(',','.'):amount.replace(',','.');
+  if(!/^\d+(?:\.\d{1,2})?$/.test(normalised))throw new Error('Enter a valid amount.');
+  const target=Number(normalised);
   const plan={...DEFAULT_PLAN,target};
   plan.monthly=suggestContribution(plan);
   calculate(plan);

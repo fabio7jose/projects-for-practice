@@ -10,6 +10,15 @@ test('custom holiday goal produces a new recommendation and explains late finish
   const plan=understandIntent('Save €4,000 for a holiday next summer');
   assert.equal(plan.target,4000);assert.equal(plan.monthly,375);assert.equal(calculate(plan).finish,'2027-09');
 });
+test('Portuguese requests preserve the financial value across number conventions',()=>{
+  for(const amount of ['€3.000','€3,000','3000 euros','€3.000,00','€3,000.00']){
+    const plan=understandIntent('Quero juntar '+amount+' para as férias no próximo verão');
+    assert.equal(plan.target,3000);assert.equal(calculate(plan).buffer,145);
+  }
+  assert.equal(understandIntent('Quero €3.250,50 para uma viagem').target,3250.5);
+  assert.equal(understandIntent('Quero €3250,50 para viajar').target,3250.5);
+  assert.throws(()=>understandIntent('Quero €3.00.00 para as férias'));
+});
 test('unhandled intent and invalid amounts do not silently become a holiday recommendation',()=>{
   for(const text of ['Hi','Buy a car for €3,000','I want a holiday next summer','€0 for a holiday','€100001 for a holiday'])assert.throws(()=>understandIntent(text));
 });

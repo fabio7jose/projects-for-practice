@@ -8,7 +8,7 @@ const js=await readFile(resolve(root,'app.mjs'),'utf8');
 const runtime=await readFile(resolve(root,'app.js'),'utf8');
 if(/<script[^>]+type=["']module["']/i.test(html))throw new Error('Direct-file preview requires the bundled classic script.');
 if(/^\s*(?:import|export)\s/m.test(runtime))throw new Error('Browser bundle contains unbundled ES module declarations.');
-const refs=[...html.matchAll(/(?:src|href)="\.\/([^"#]+)"/g)].map(m=>m[1]);
+const refs=[...html.matchAll(/(?:src|href|data-(?:src|href)-(?:en|pt))="\.\/([^"#]+)"/g)].map(m=>m[1]);
 for(const ref of refs)await access(resolve(root,ref));
 for(const ref of [...css.matchAll(/url\(['"]?\.\/([^)'"\s]+)/g)].map(m=>m[1]))await access(resolve(root,ref));
 const ids=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]));
